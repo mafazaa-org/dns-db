@@ -112,7 +112,10 @@ high_match = [
     "hello.cimaclub.watch",
 ]
 
-low_no_match = ["www.google.ad", "www.google.movie"]
+low_no_match = [
+    "www.google.ad",
+    "www.google.movie",
+]
 
 high_no_match = []
 

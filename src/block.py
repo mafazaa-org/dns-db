@@ -1,4 +1,5 @@
 from zone import Zone
+from re import match
 
 
 class Block:
@@ -38,6 +39,18 @@ class Block:
         for domain in hosts:
             Zone.from_json(0, {"host": domain, "type": "A", "answer": "0.0.0.0"})
 
+        for domain in self.high_list:
+
+            if not match(self.low_regex, domain) == None:
+                raise Exception(
+                    f"{domain} exists in high.list while it's already blocked by low.regex"
+                )
+
+            if not match(self.high_regex, domain) == None:
+                raise Exception(
+                    f"{domain} exists in high.list while it's already blocked by high.regex"
+                )
+
     @property
     def low_json(self) -> dict:
         return {"list": self.low_list, "regex": self.low_regex}
@@ -55,7 +68,7 @@ class Block:
 
 
 low = {
-    "list": [],
+    "list": ["motherless.com", "4chan.com", "xvideos.com"],
     "regex": {
         "contains": [
             "porn",
