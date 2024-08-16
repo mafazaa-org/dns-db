@@ -1,31 +1,70 @@
 from block import Block
 from re import match
+from test_domain import test_domain
+
+ending = ""
 
 
 def main():
+    global ending
+
     block = Block()
 
-    test_matches(block)
+    block.validate()
 
+    test_matches(block)
+    test_non_matches(block)
+
+    ending = "."
+
+    test_matches(block)
     test_non_matches(block)
 
 
 def test_matches(block: Block):
+
     for domain in low_match:
-        assert match(block.low_regex, domain) != None
-        assert match(block.high_regex, domain) != None
+        domain = domain + ending
+
+        test_domain(
+            domain,
+            "test_block.test_matches (id = 1)",
+            match(block.low_regex, domain),
+        )
+        test_domain(
+            domain, "test_block.test_matches (id = 2) ", match(block.high_regex, domain)
+        )
 
     for domain in high_match:
-        assert match(block.high_regex, domain) != None
+        domain = domain + ending
+        test_domain(
+            domain, "test_block.test_matches (id = 3) ", match(block.high_regex, domain)
+        )
 
 
 def test_non_matches(block: Block):
     for domain in low_no_match:
-        assert match(block.low_regex, domain) == None
+        domain = domain + ending
+        test_domain(
+            domain,
+            "test_block.test_non_matches (id = 1) ",
+            match(block.low_regex, domain) == None,
+        )
 
     for domain in high_no_match:
-        assert match(block.high_regex, domain) == None
-        assert match(block.low_regex, domain) == None
+        domain = domain + ending
+
+        test_domain(
+            domain,
+            "test_block.test_non_matches (id = 2) ",
+            match(block.high_regex, domain) == None,
+        )
+
+        test_domain(
+            domain,
+            "test_block.test_non_matches (id = 3) ",
+            match(block.low_regex, domain) == None,
+        )
 
 
 low_match = [
