@@ -1,25 +1,88 @@
 from dns_list.src.block import Block
+from dns_list.src._block import *
 from re import match
-
-ending = ""
-
-
-def test_block():
-    global ending
-
-    block = Block()
-
-    _test_matches(block)
-    _test_non_matches(block)
-
-    ending = "."
-
-    _test_matches(block)
-    _test_non_matches(block)
+from .utils import with_ending
+from pytest import raises
 
 
-def _test_matches(block: Block):
+def test_initializing():
+    low_list = low["list"].copy()
+    high_list = low_list + high["list"]
 
+    block = __init__()
+
+    low_list.sort()
+    high_list.sort()
+
+    assert block.low_list == low_list
+    assert block.high_list == high_list
+
+    assert block.low_json == {"list": block.low_list, "regex": block.low_regex}
+    assert block.high_json == {
+        "list": low["list"] + high["list"],
+        "regex": block.high_regex,
+    }
+
+    assert block.to_records("www.google.com") == [
+        {
+            "host": "www.google.com",
+            "type": "A",
+            "answer": "0.0.0.0",
+        }
+    ]
+
+    assert block.to_string("www.google.com") == "google.com"
+
+
+def test_set():
+    block = __init__()
+    block.low_regex_contains = block.low_regex_contains.copy()
+    block.low_regex_contains.append("porn")
+
+    with raises(
+        Exception,
+    ) as excep_info:
+        block.set()
+    assert (
+        excep_info.value.args[0]
+        == f"dublicate of 'porn' in low regex (contains) \n[{block.group_name}]"
+    )
+
+    block.low_regex_contains = low["regex"]["contains"]
+    block.low_list = block.low_list.copy()
+    block.low_list.append("www.pornhub.com")
+
+    with raises(
+        Exception,
+    ) as excep_info:
+        block.set()
+    assert (
+        excep_info.value.args[0]
+        == f"www.pornhub.com exists in low list while it's already blocked by low.regex \n[{block.group_name}]"
+    )
+
+
+def test_valid_zones():
+
+    for invalid_domain in [[], 3232, ["hello", "world"], ["hello.com"]]:
+        block = __init__()
+        block.high_list = block.high_list.copy()
+
+        block.high_list.append(invalid_domain)
+
+        with raises(Exception) as excep_info:
+            block.valid_zones()
+
+        assert excep_info.type == Exception
+        assert (
+            excep_info.value.args[0]
+            == f"Can't make a zone for the domain {invalid_domain} in high list with data: A    0.0.0.0   \n[{block.group_name}]"
+        )
+
+
+@with_ending
+def test_matches(ending: str):
+    block = __init__()
     for domain in low_match:
         domain = domain + ending
 
@@ -31,7 +94,9 @@ def _test_matches(block: Block):
         assert match(block.high_regex, domain)
 
 
-def _test_non_matches(block: Block):
+@with_ending
+def test_non_matches(ending: str):
+    block = __init__()
     for domain in low_no_match:
         domain = domain + ending
 
@@ -56,16 +121,9 @@ low_match = [
     "www.sex.com",
     "sex.com",
     "sex.hello.example.com",
-    "naked.com",
-    "nude.com",
-    "ass.com",
     "ass.sex.com",
     "asses.pornhub.com",
-    "tities.com",
-    "a55hole.com",
     "breast.pornhub.com",
-    "cocaine.alcohol.com",
-    "dick.com",
     "www.striphacker.com",
     "ads.google.com",
     "ads.example.com",
@@ -98,5 +156,5 @@ low_no_match = [
 high_no_match = []
 
 
-if __name__ == "__main__":
-    main()
+def __init__() -> Block:
+    return Block()

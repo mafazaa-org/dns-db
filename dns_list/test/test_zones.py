@@ -1,43 +1,114 @@
 from dns_list.src.zones import Zones
+from dns_list.src._zones import *
+from dns_list.src.block import Block
 from re import match
-
-ending = ""
-
-
-def test_zones():
-    global ending
-
-    zones = Zones()
-
-    _test_matches(zones)
-    _test_non_matches(zones)
-
-    ending = "."
-
-    _test_matches(zones)
-    _test_non_matches(zones)
+from .utils import with_ending
+from pytest import raises
 
 
-def _test_matches(zones: Zones):
+def test_initialization():
+    low_list = low.copy()
+    high_list = high.copy() + low_list
+
+    zones = __init__()
+
+    low_list.sort(key=zones.to_string)
+    high_list.sort(key=zones.to_string)
+
+    assert zones.high_list == high_list
+    assert zones.low_list == low_list
+
+    # test to string
+    assert (
+        zones.to_string({"host": "www.google.com", "type": "A", "answer": "0.0"})
+        == "google.com"
+    )
+    assert (
+        zones.to_string({"host": "google.com", "type": "A", "answer": "0.0"})
+        == "google.com"
+    )
+
+    # test to records
+
+    assert zones.to_records(
+        {"host": "www.google.com", "answers": [{"type": "A", "answer": "0.0.0.0"}]}
+    ) == [{"host": "www.google.com", "type": "A", "answer": "0.0.0.0"}]
+
+    assert zones.to_records(
+        {
+            "host": "www.google.com",
+            "answers": [
+                {"type": "A", "answer": "0.0.0.0"},
+                {"type": "AAAA", "answer": "::"},
+                {"type": "CNAME", "answer": "forcesafesearch.google.com"},
+            ],
+        }
+    ) == [
+        {"host": "www.google.com", "type": "A", "answer": "0.0.0.0"},
+        {"host": "www.google.com", "type": "AAAA", "answer": "::"},
+        {
+            "host": "www.google.com",
+            "type": "CNAME",
+            "answer": "forcesafesearch.google.com",
+        },
+    ]
+
+
+def test_valid():
+    block = Block()
+
+    invalid_zones = [
+        {
+            "host": block.to_records(x)[0]["host"],
+            "answers": [
+                {
+                    "type": block.to_records(x)[0]["type"],
+                    "answer": block.to_records(x)[0]["answer"],
+                }
+            ],
+        }
+        for x in [[], 2323, ["hello"], "hwllo", "", None, "goooooooo"]
+    ]
+
+    for invalid_zone in invalid_zones:
+        group = __init__()
+
+        group.high_list.append(invalid_zone)
+
+        with raises(Exception, match=f"found invalid host '.*' in high list"):
+            group.valid()
+
+    group = __init__()
+    group.high_list.append({"host": "some_host.com", "answers": []})
+    with raises(
+        Exception, match=f"Found domain 'some_host.com' without answers in high list"
+    ):
+        group.valid()
+
+
+def test_matches():
+    zones = __init__()
     for domain in low_match:
-        __test_matches(domain, zones.low_list)
-        __test_matches(domain, zones.high_list)
+        _test_matches(domain, zones.low_list)
+        _test_matches(domain, zones.high_list)
 
     for domain in high_match:
-        __test_matches(domain, zones.high_list)
+        _test_matches(domain, zones.high_list)
 
 
-def _test_non_matches(zones: Zones):
+def test_non_matches():
+    zones = __init__()
 
     for domain in low_no_match:
-        __test_matches(domain, zones.low_list, True)
-        __test_matches(domain, zones.high_list, True)
+        _test_matches(domain, zones.low_list, True)
+        _test_matches(domain, zones.high_list, True)
 
     for domain in high_no_match:
-        __test_matches(domain, zones.high_list, True)
+        _test_matches(domain, zones.high_list, True)
 
 
-def __test_matches(domain: str, regex: list, original_found=False):
+@with_ending
+def _test_matches(domain: str, regex: list, original_found=False, ending=""):
     domain = domain + ending
     found = original_found
     for regex in regex:
@@ -257,5 +328,5 @@ low_no_match = [
 high_no_match = []
 
 
-if __name__ == "__main__":
-    main()
+def __init__() -> Zones:
+    return Zones()
