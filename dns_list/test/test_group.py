@@ -1,11 +1,17 @@
-from src.group import Group
+from dns_list.src.group import Group
 
 
-def main(): ...
+def test_group():
+    group = TestGroup()
+    _test_initializing()
 
 
-if __name__ == "__main__":
-    main()
+def _test_initializing():
+
+    group = TestGroup()
+
+    assert group.low_list == ["www.google.com"]
+    assert group.high_list == ["www.google.com", "www.youtube.com"]
 
 
 class TestGroup(Group):

@@ -1,55 +1,50 @@
-from src.zones import Zones
+from dns_list.src.zones import Zones
 from re import match
-from test.test_domain import test_domain
 
 ending = ""
 
 
-def main():
+def test_zones():
     global ending
 
     zones = Zones()
 
-    test_matches(zones)
-    test_non_matches(zones)
+    _test_matches(zones)
+    _test_non_matches(zones)
 
     ending = "."
 
-    test_matches(zones)
-    test_non_matches(zones)
+    _test_matches(zones)
+    _test_non_matches(zones)
 
 
-def test_matches(zones: Zones):
+def _test_matches(zones: Zones):
     for domain in low_match:
-        _test_matches(domain, zones.low_list, 1)
-        _test_matches(domain, zones.high_list, 2)
+        __test_matches(domain, zones.low_list)
+        __test_matches(domain, zones.high_list)
 
     for domain in high_match:
-        _test_matches(domain, zones.high_list, 3)
+        __test_matches(domain, zones.high_list)
 
 
-def test_non_matches(zones: Zones):
+def _test_non_matches(zones: Zones):
 
     for domain in low_no_match:
-        _test_matches(domain, zones.low_list, 1, True)
-        _test_matches(domain, zones.high_list, 2, True)
+        __test_matches(domain, zones.low_list, True)
+        __test_matches(domain, zones.high_list, True)
 
     for domain in high_no_match:
-        _test_matches(domain, zones.high_list, 3, True)
+        __test_matches(domain, zones.high_list, True)
 
 
-def _test_matches(domain: str, regex: list, id: int, original_found=False):
+def __test_matches(domain: str, regex: list, original_found=False):
     domain = domain + ending
     found = original_found
     for regex in regex:
         if match(regex["host"], domain):
             found = not original_found
 
-    test_domain(
-        domain,
-        f"test_zones.test_{'non_' if original_found == True else ''}matches (id = {id}) ",
-        found,
-    )
+    assert found
 
 
 low_match = [
