@@ -33,17 +33,22 @@ class Block(Group):
 
         super().set()
 
-        for domain in self.high_list:
+        def common_between_regex_and_list(list: list, level: str):
 
-            if not match(self.low_regex, domain) == None:
-                raise Exception(
-                    f"{domain} exists in high.list while it's already blocked by low.regex \n[{self.group_name}]"
-                )
+            for domain in list:
 
-            if not match(self.high_regex, domain) == None:
-                raise Exception(
-                    f"{domain} exists in high.list while it's already blocked by high.regex \n[{self.group_name}]"
-                )
+                if not match(self.low_regex, domain) == None:
+                    raise Exception(
+                        f"{domain} exists in {level} list while it's already blocked by low.regex \n[{self.group_name}]"
+                    )
+
+                if not match(self.high_regex, domain) == None:
+                    raise Exception(
+                        f"{domain} exists in {level} list while it's already blocked by high.regex \n[{self.group_name}]"
+                    )
+
+        common_between_regex_and_list(self.high_list, "high")
+        common_between_regex_and_list(self.low_list, "low")
 
     # valid zones
     def valid_zones(self):

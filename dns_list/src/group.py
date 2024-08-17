@@ -2,6 +2,8 @@ from .zone import Zone
 from os.path import join
 from json import dump
 
+LEVELS = ["high", "low"]
+
 
 class Group:
 
@@ -20,7 +22,7 @@ class Group:
         self.valid()
 
     def set(self):
-        self.do_for_lists(self._set)
+        self.map_to_lists(self._set)
 
     def _set(self, list: list, list_name: str):
         found = []
@@ -32,13 +34,13 @@ class Group:
             found.append(self.to_string(element))
 
     def sort(self):
-        self.do_for_lists(lambda x, y: self._sort(x))
+        self.map_to_lists(lambda x, y: self._sort(x))
 
     def _sort(self, list: list):
         list.sort(key=self.to_string)
 
     def valid_zones(self):
-        self.do_for_lists(self._valid_zones)
+        self.map_to_lists(self._valid_zones)
 
     def _valid_zones(self, list: list, list_name: str):
         for host in list:
@@ -51,28 +53,31 @@ class Group:
                     )
 
     def valid(self):
-        self.do_for_lists(self._valid)
+        self.map_to_lists(self._valid)
 
     def _valid(self, list: list, list_name: str):
         for e in list:
-            domain = self.to_string(e)
-            if not "." in domain:
+            try:
+                domain = self.to_string(e)
+                if not "." in domain or not domain:
+                    raise ValueError()
+            except:
                 raise Exception(
                     f"found invalid host '{domain}' in {list_name} \n[{self.group_name}]"
                 )
 
-    def do_for_lists(self, func):
+    def map_to_lists(self, func):
         func(self.low_list, "low list")
         func(self.high_list, "high list")
 
     def dump(self):
-        for level in ["high", "low"]:
-            with open(join(level, self.file_name), "w", encoding="utf-8") as f:
-                dump(get_json(self, level), f)
+        jsons = self.jsons
+        for level in LEVELS:
 
-    @property
-    def file_name(self) -> str:
-        return self.group_name + ".json"
+            with open(
+                join(level, self.group_name + ".json"), "w", encoding="utf-8"
+            ) as f:
+                dump(jsons[level], f)
 
     @property
     def low_json(self) -> dict:
@@ -82,13 +87,12 @@ class Group:
     def high_json(self) -> dict:
         return {"list": self.high_list}
 
-
-def get_json(group: Group, level: str):
-    match level:
-        case "high":
-            return group.high_json
-        case "low":
-            return group.low_json
+    @property
+    def jsons(self):
+        return {
+            "high": self.high_json,
+            "low": self.low_json,
+        }
 
 
 def extract_www(func):
