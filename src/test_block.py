@@ -10,8 +10,6 @@ def main():
 
     block = Block()
 
-    block.validate()
-
     test_matches(block)
     test_non_matches(block)
 

@@ -10,8 +10,6 @@ def main():
 
     zones = Zones()
 
-    zones.validate()
-
     test_matches(zones)
     test_non_matches(zones)
 
@@ -23,21 +21,21 @@ def main():
 
 def test_matches(zones: Zones):
     for domain in low_match:
-        _test_matches(domain, zones.low, 1)
-        _test_matches(domain, zones.high, 2)
+        _test_matches(domain, zones.low_list, 1)
+        _test_matches(domain, zones.high_list, 2)
 
     for domain in high_match:
-        _test_matches(domain, zones.high, 3)
+        _test_matches(domain, zones.high_list, 3)
 
 
 def test_non_matches(zones: Zones):
 
     for domain in low_no_match:
-        _test_matches(domain, zones.low, 1, True)
-        _test_matches(domain, zones.high, 2, True)
+        _test_matches(domain, zones.low_list, 1, True)
+        _test_matches(domain, zones.high_list, 2, True)
 
     for domain in high_no_match:
-        _test_matches(domain, zones.high, 3, True)
+        _test_matches(domain, zones.high_list, 3, True)
 
 
 def _test_matches(domain: str, regex: list, id: int, original_found=False):

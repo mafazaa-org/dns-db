@@ -1,35 +1,31 @@
-from zone import Zone
+from _zones import *
+from group import Group
 
 
-class Zones:
+class Zones(Group):
 
     def __init__(self):
-        self.low = low
-        self.high = high + low
+        self.low_list = low
+        self.high_list = high + low
 
-    def validate(self):
+        self.to_string = lambda x: x["host"]
+        self.to_records = lambda x: [
+            {"host": x["host"], "type": answer["type"], "answer": answer["answer"]}
+            for answer in x["answers"]
+        ]
+        self.group_name = "zones list"
 
-        records = []
+        super().__init__()
 
-        for record in self.high:
-            for answer in record["answers"]:
-                records.append(
-                    {
-                        "host": record["host"],
-                        "type": answer["type"],
-                        "answer": answer["answer"],
-                    }
+    # _valid
+    def _valid(self, list, list_name: str):
+
+        super()._valid(list, list_name)
+        for record in list:
+            if len(record["answers"]) < 1:
+                raise Exception(
+                    f"Found domain '{record['host']}' without answers in {list_name}"
                 )
-
-        for record in records:
-            Zone.from_json(
-                0,
-                {
-                    "host": record["host"],
-                    "type": record["type"],
-                    "answer": record["answer"],
-                },
-            )
 
     @property
     def file_name(self) -> str:
@@ -37,36 +33,8 @@ class Zones:
 
     @property
     def low_json(self) -> dict:
-        return self.low
+        return self.low_list
 
     @property
     def high_json(self) -> dict:
-        return self.high
-
-
-low = [
-    {
-        "host": "(www\.google\..+)|(((www\.youtube(-nocookie)?)|(m\.youtube)|(youtubei?\.googleapis))\.com)",
-        "answers": [
-            {
-                "type": "A",
-                "answer": "216.239.38.120",
-            },
-            {
-                "type": "AAAA",
-                "answer": "2a00:1450:4006:811::2004",
-            },
-        ],
-    },
-    {
-        "host": "www.bing.com",
-        "answers": [{"type": "A", "answer": "204.79.197.220"}],
-    },
-    {
-        "host": "duckduckgo.com",
-        "answers": [{"type": "CNAME", "answer": "safe.duckduckgo.com"}],
-    },
-]
-
-
-high = []
+        return self.high_list

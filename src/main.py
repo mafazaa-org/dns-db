@@ -10,8 +10,6 @@ def main():
     records = [Zones(), Block()]
 
     for group in records:
-        group.validate()
-
         for level in levels:
             with open(join(level, group.file_name), "w", encoding="utf-8") as f:
                 dump(get_json(group, level), f)
