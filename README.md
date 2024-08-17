@@ -2,6 +2,8 @@
 
 This repo is basicly for storing blocklists and zones for mafazaa dns servers. Also I coded some python scripts along with some tests to increase productivity and reduce the amount of errors that could occur while updating the list
 
+the dns servers source code exists at [https://github.com/ahmed-elbehairy7/mafazaa-dns](https://github.com/ahmed-elbehairy7/mafazaa-dns)
+
 ## Usage
 
 after cloning the repository, installing dependencies if exists, the `run.bat` command should do it's job perfectely if you run it from the root of the repo, and the same goes for `pytest` if you have it installed
@@ -72,6 +74,8 @@ I belive the easiest way to get the lists from the server is by requesting the r
 so the formula is as follows:
 
 https://raw.githubusercontent.com/ahmed-elbehairy7/mafazaa-dns-lists/`{branch}`/`{level}`/`{file}`
+
+for development and testing environments, `exampleblock.com` and `examplezone.com` are added to lists
 
 ## py scripts
 
