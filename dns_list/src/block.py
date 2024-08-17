@@ -6,8 +6,8 @@ from .group import Group
 class Block(Group):
 
     def __init__(self):
-        self.low_list = low["list"]
-        self.high_list = low["list"] + high["list"]
+        self.low_list = low["list"] + ["exampleblock.com"]
+        self.high_list = low["list"] + high["list"] + ["exampleblock.com"]
 
         self.low_regex_contains = low["regex"]["contains"]
         self.low_regex_subdomains = low["regex"]["subdomains"]

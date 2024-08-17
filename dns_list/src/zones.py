@@ -5,8 +5,22 @@ from .group import Group
 class Zones(Group):
 
     def __init__(self):
-        self.low_list = low
-        self.high_list = high + low
+        self.low_list = low + [
+            {
+                "host": "examplezone.com",
+                "answers": [{"type": "A", "answer": "127.0.0.1"}],
+            }
+        ]
+        self.high_list = (
+            high
+            + low
+            + [
+                {
+                    "host": "examplezone.com",
+                    "answers": [{"type": "A", "answer": "127.0.0.1"}],
+                }
+            ]
+        )
 
         self.to_string = lambda x: x["host"]
         self.to_records = lambda x: [
