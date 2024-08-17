@@ -1,6 +1,6 @@
 from re import match
-from _block import *
-from group import Group
+from src._block import *
+from src.group import Group
 
 
 class Block(Group):
@@ -19,7 +19,7 @@ class Block(Group):
 
         self.to_string = lambda x: x
         self.to_records = lambda x: [{"host": x, "type": "A", "answer": "0.0.0.0"}]
-        self.group_name = "Block list"
+        self.group_name = "blocklist"
 
         super().__init__()
 
@@ -67,15 +67,11 @@ class Block(Group):
 
     @property
     def low_json(self) -> dict:
-        return {"list": self.low_list, "regex": self.low_regex}
+        return {**super().low_json, "regex": self.low_regex}
 
     @property
     def high_json(self) -> dict:
-        return {"list": self.high_list, "regex": self.high_regex}
-
-    @property
-    def file_name(self) -> str:
-        return "blocklist.json"
+        return {**super().high_json, "regex": self.high_regex}
 
     @property
     def high_regex(self):

@@ -1,6 +1,6 @@
-from zones import Zones
+from src.zones import Zones
 from re import match
-from test_domain import test_domain
+from test.test_domain import test_domain
 
 ending = ""
 

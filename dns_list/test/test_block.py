@@ -1,6 +1,6 @@
-from block import Block
+from src.block import Block
 from re import match
-from test_domain import test_domain
+from test.test_domain import test_domain
 
 ending = ""
 

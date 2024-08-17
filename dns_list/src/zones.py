@@ -1,5 +1,5 @@
-from _zones import *
-from group import Group
+from src._zones import *
+from src.group import Group
 
 
 class Zones(Group):
@@ -13,7 +13,7 @@ class Zones(Group):
             {"host": x["host"], "type": answer["type"], "answer": answer["answer"]}
             for answer in x["answers"]
         ]
-        self.group_name = "zones list"
+        self.group_name = "zones"
 
         super().__init__()
 
@@ -26,15 +26,3 @@ class Zones(Group):
                 raise Exception(
                     f"Found domain '{record['host']}' without answers in {list_name}"
                 )
-
-    @property
-    def file_name(self) -> str:
-        return "zones.json"
-
-    @property
-    def low_json(self) -> dict:
-        return self.low_list
-
-    @property
-    def high_json(self) -> dict:
-        return self.high_list

@@ -1,1 +1,1 @@
-@python src\main.py 
+@python dns_list

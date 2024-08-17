@@ -1,4 +1,6 @@
-from zone import Zone
+from src.zone import Zone
+from os.path import join
+from json import dump
 
 
 class Group:
@@ -62,6 +64,31 @@ class Group:
     def do_for_lists(self, func):
         func(self.low_list, "low list")
         func(self.high_list, "high list")
+
+    def dump(self):
+        for level in ["high", "low"]:
+            with open(join(level, self.file_name), "w", encoding="utf-8") as f:
+                dump(get_json(self, level), f)
+
+    @property
+    def file_name(self) -> str:
+        return self.group_name + ".json"
+
+    @property
+    def low_json(self) -> dict:
+        return {"list": self.low_list}
+
+    @property
+    def high_json(self) -> dict:
+        return {"list": self.high_list}
+
+
+def get_json(group: Group, level: str):
+    match level:
+        case "high":
+            return group.high_json
+        case "low":
+            return group.low_json
 
 
 def extract_www(func):
