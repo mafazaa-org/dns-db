@@ -1,5 +1,5 @@
-from dns_list.src._zones import *
-from dns_list.src.group import Group
+from ._zones import *
+from .group import Group
 
 
 class Zones(Group):

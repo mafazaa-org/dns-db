@@ -1,3 +1,3 @@
-from src import __main__
+from src.__main__ import main
 
-__main__.main()
+main()

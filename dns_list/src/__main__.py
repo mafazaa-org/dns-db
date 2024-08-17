@@ -1,6 +1,6 @@
-from src.zones import Zones
-from src.block import Block
-from src.group import Group
+from .zones import Zones
+from .block import Block
+from .group import Group
 
 levels = ["high", "low"]
 

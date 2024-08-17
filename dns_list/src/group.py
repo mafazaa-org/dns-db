@@ -1,4 +1,4 @@
-from dns_list.src.zone import Zone
+from .zone import Zone
 from os.path import join
 from json import dump
 

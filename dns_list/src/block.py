@@ -1,6 +1,6 @@
 from re import match
-from dns_list.src._block import *
-from dns_list.src.group import Group
+from ._block import *
+from .group import Group
 
 
 class Block(Group):
