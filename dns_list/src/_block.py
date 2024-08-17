@@ -13,34 +13,14 @@ low = {
     "regex": {
         "contains": [
             # porn | nudity
-            # WARNING!! inapropriate keywords!!
             "porn",
             "sex",
-            "naked",
-            "nude",
-            "ass",
-            "boob",
-            "tities",
-            "a55hole",
-            "breast",
-            "dick",
-            "pussy",
-            "bitch",
-            "butt",
-            "fuck",
-            "anal",
-            "blowjob",
-            "dildo",
             "xnxx",
             "strip",
             "sweet(chicks|kisses|xladies)",
-            "lesbian",
-            "phcdn",
+            "phncdn",
             "undress",
             "sxccdn",
-            "hentai",
-            "ecchi",
-            "plus18",
             # nfsw
             "devianart",
             # vpn
@@ -49,15 +29,13 @@ low = {
             "adsystem",
             # anime/manga/webtoon
             "anime",
-            "manga",
-            "manhwa",
             "webtoon",
-            # alcohol | drugs
-            "cocaine",
-            "alcohol",
+            # alcohol
             "beer",
             # unwanted
             "lgbt",
+            "likee",
+            "kwai",
         ],
         "subdomains": [
             # ads
