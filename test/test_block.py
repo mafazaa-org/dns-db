@@ -1,5 +1,5 @@
-from lists.src.block import Block
-from lists.src._block import *
+from dns_lists.src.block import Block
+from dns_lists.src._block import *
 from re import match
 from .utils import with_ending
 from pytest import raises

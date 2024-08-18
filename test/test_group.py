@@ -1,4 +1,4 @@
-from lists.src.group import Group
+from dns_lists.src.group import Group
 from pytest import raises
 from os.path import join
 from json import dump, load
