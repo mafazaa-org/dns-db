@@ -1,13 +1,18 @@
-from dns_list.src.zones import Zones
-from dns_list.src._zones import *
-from dns_list.src.block import Block
+from lists.src.zones import Zones
+from lists.src._zones import *
+from lists.src.block import Block
 from re import match
 from .utils import with_ending
 from pytest import raises
 
 
 def test_initialization():
-    low_list = low.copy()
+    low_list = low.copy() + [
+        {
+            "host": "examplezone.com",
+            "answers": [{"type": "A", "answer": "127.0.0.1"}],
+        }
+    ]
     high_list = high.copy() + low_list
 
     zones = __init__()

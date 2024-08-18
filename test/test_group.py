@@ -1,4 +1,4 @@
-from dns_list.src.group import Group
+from lists.src.group import Group
 from pytest import raises
 from os.path import join
 from json import dump, load
@@ -95,7 +95,7 @@ class GroupTest(Group):
         for level in LEVELS:
 
             with open(
-                join("dns_list", "test", level, self.group_name + ".json"),
+                join("test", level, self.group_name + ".json"),
                 "w",
                 encoding="utf-8",
             ) as f:

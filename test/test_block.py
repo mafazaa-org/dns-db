@@ -1,12 +1,12 @@
-from dns_list.src.block import Block
-from dns_list.src._block import *
+from lists.src.block import Block
+from lists.src._block import *
 from re import match
 from .utils import with_ending
 from pytest import raises
 
 
 def test_initializing():
-    low_list = low["list"].copy()
+    low_list = low["list"].copy() + ["exampleblock.com"]
     high_list = low_list + high["list"]
 
     block = __init__()
@@ -19,7 +19,7 @@ def test_initializing():
 
     assert block.low_json == {"list": block.low_list, "regex": block.low_regex}
     assert block.high_json == {
-        "list": low["list"] + high["list"],
+        "list": high_list,
         "regex": block.high_regex,
     }
 
