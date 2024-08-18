@@ -1,1 +1,1 @@
-@python dns_list
+@python .
