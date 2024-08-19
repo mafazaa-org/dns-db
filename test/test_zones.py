@@ -112,6 +112,31 @@ def test_non_matches():
         _test_matches(domain, zones.high_list, True)
 
 
+def test_matches_clean():
+    zones = __init__()
+    for domain in [clean_host(x) for x in low_match]:
+        _test_matches(domain, zones.low_list)
+        _test_matches(domain, zones.high_list)
+
+    for domain in [clean_host(x) for x in high_match]:
+        _test_matches(domain, zones.high_list)
+
+
+def test_non_matches_clean():
+    zones = __init__()
+
+    for domain in [clean_host(x) for x in low_no_match]:
+        _test_matches(domain, zones.low_list, True)
+        _test_matches(domain, zones.high_list, True)
+
+    for domain in [clean_host(x) for x in high_no_match]:
+        _test_matches(domain, zones.high_list, True)
+
+
+def clean_host(host: str):
+    return host.removeprefix("www.").removesuffix(".")
+
+
 @with_ending
 def _test_matches(domain: str, regex: list, original_found=False, ending=""):
     domain = domain + ending
@@ -124,6 +149,7 @@ def _test_matches(domain: str, regex: list, original_found=False, ending=""):
 
 
 low_match = [
+    "google.com",
     "www.google.com",
     "www.google.ad",
     "www.google.ae",
@@ -318,6 +344,7 @@ low_match = [
     "www.youtube-nocookie.com",
     "www.bing.com",
     "duckduckgo.com",
+    "youtube.com",
 ]
 
 high_match = []
@@ -325,8 +352,9 @@ high_match = []
 low_no_match = [
     "ads.google.com",
     "analytics.google.com",
-    "youtube.com",
     "example.youtube.com",
+    "example.bing.com",
+    "something.duckduckgo.com",
     "search.google.ad",
 ]
 

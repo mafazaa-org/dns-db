@@ -2,13 +2,13 @@ low = [
     # safe search | strict mode
     {
         # google & youtube
-        "host": "(www\.google\..+)",
+        "host": "(w{3}\.)?google\..+",
         "answers": [
             {"type": "CNAME", "answer": "forcesafesearch.google.com"},
         ],
     },
     {
-        "host": "(((www\.youtube(-nocookie)?)|(m\.youtube)|(youtubei?\.googleapis))\.com)",
+        "host": "((((w{3}\.)?youtube(-nocookie)?)|(m\.youtube)|(youtubei?\.googleapis))\.com)",
         "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
     },
     {
@@ -39,7 +39,7 @@ low = [
     },
     {
         # bing
-        "host": "www.bing.com",
+        "host": "(w{3}\.)?bing.com",
         "answers": [{"type": "A", "answer": "204.79.197.220"}],
     },
     {
