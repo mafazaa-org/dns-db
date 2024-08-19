@@ -40,7 +40,7 @@ low = [
     {
         # bing
         "host": "(w{3}\.)?bing.com",
-        "answers": [{"type": "A", "answer": "204.79.197.220"}],
+        "answers": [{"type": "CNAME", "answer": "strict.bing.com"}],
     },
     {
         # duckduckgo
