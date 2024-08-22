@@ -36,6 +36,8 @@ low = {
             "lgbt",
             "likee",
             "kwai",
+            # malawre
+            "(wmail|fairu|bideo|privatproxy|ahoravideo)-(endpoint|blog|chat|cdn)",
         ],
         "subdomains": [
             # ads
