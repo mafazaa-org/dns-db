@@ -55,7 +55,7 @@ class Group:
         crsr.execute(f"CREATE TABLE {self.group_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table_schema))});")
         crsr.execute(f"CREATE TABLE {self.table2_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table2_schema))});")
 
-    def update_db(self, conn: Connection, crsr: Cursor, level : str): ...
+    def update_db(self, crsr: Cursor, level : str): ...
     
     def get_list(self, level):
         match level:

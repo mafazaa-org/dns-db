@@ -7,8 +7,8 @@ from .group import Group
 class Block(Group):
 
     def __init__(self):
-        self.low_list = low["list"] + ["exampleblock.com"]
-        self.high_list = low["list"] + high["list"] + ["exampleblock.com"]
+        self.low_list = low["list"]
+        self.high_list = low["list"] + high["list"]
 
         self.low_regex_contains = low["regex"]["contains"]
         self.low_regex_subdomains = low["regex"]["subdomains"]
@@ -23,7 +23,7 @@ class Block(Group):
         self.to_records = lambda x: [{"host": x, "type": "A", "answer": "0.0.0.0"}]
         self.to_db = lambda x: (x,)
         self.group_name = "blocklist"
-        self.table_schema = ["domain TEXT PRIMARY KEY"]
+        self.table_schema = ["host TEXT PRIMARY KEY"]
         self.table2_schema = ["regex TEXT PRIMARY KEY", "is_subdomain BOOLEAN"]
         self.table2_name = "blockregex"
 
@@ -94,7 +94,7 @@ class Block(Group):
     def create_regex(self, contains: list, subdomains: list):
         return f"(.*({'|'.join(contains)}).*)|((.+\.)?({'|'.join(subdomains)})\..+)"
 
-    def update_db(self, conn: Connection, crsr: Cursor, level: str):
+    def update_db(self, crsr: Cursor, level: str):
         crsr.executemany(
             f"INSERT INTO {self.group_name} VALUES(?)", self.get_list(level)
         )

@@ -1,15 +1,32 @@
 low = [
-    # safe search | strict mode
     {
-        # google & youtube
-        "host": "(w{3}\.)?google\..+",
-        "answers": [
-            {"type": "CNAME", "answer": "forcesafesearch.google.com"},
-        ],
+        "host": "youtube.com",
+        "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
     },
     {
-        "host": "((((w{3}\.)?youtube(-nocookie)?)|(m\.youtube)|(youtubei?\.googleapis))\.com)",
+        "host": "m.youtube.com",
         "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
+    },
+    {
+        "host": "youtubei.googleapis.com",
+        "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
+    },
+    {
+        "host": "youtube.googleapis.com",
+        "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
+    },
+    {
+        "host": "www.youtube-nocookie.com",
+        "answers": [{"type": "CNAME", "answer": "restrict.youtube.com"}],
+    },
+    {
+        # bing
+        "host": "bing.com",
+        "answers": [{"type": "CNAME", "answer": "strict.bing.com"}],
+    },
+    {
+        "host": "www.bing.com",
+        "answers": [{"type": "CNAME", "answer": "strict.bing.com"}],
     },
     {
         "host": "forcesafesearch.google.com",
@@ -36,11 +53,6 @@ low = [
                 "answer": "2a00:1450:4006:811::2004",
             },
         ],
-    },
-    {
-        # bing
-        "host": "(w{3}\.)?bing.com",
-        "answers": [{"type": "CNAME", "answer": "strict.bing.com"}],
     },
     {
         # duckduckgo

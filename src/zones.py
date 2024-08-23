@@ -25,22 +25,8 @@ TYPE_LOOKUP = {
 class Zones(Group):
 
     def __init__(self):
-        self.low_list = low + [
-            {
-                "host": "examplezone.com",
-                "answers": [{"type": "A", "answer": "127.0.0.1"}],
-            }
-        ]
-        self.high_list = (
-            high
-            + low
-            + [
-                {
-                    "host": "examplezone.com",
-                    "answers": [{"type": "A", "answer": "127.0.0.1"}],
-                }
-            ]
-        )
+        self.low_list = low
+        self.high_list = high + low
 
         self.to_string = lambda x: x["host"]
         self.to_records = lambda x: [
@@ -50,7 +36,7 @@ class Zones(Group):
         self.group_name = "zoneslist"
         self.table_schema = [
             "id INTEGER PRIMARY KEY AUTOINCREMENT",
-            "domain TEXT UNIQUE",
+            "host TEXT UNIQUE",
         ]
         self.to_db = lambda x: ((x["host"],), x["answers"])
         self.table2_name = "answers"
@@ -63,11 +49,11 @@ class Zones(Group):
 
         super().__init__()
 
-    def update_db(self, conn: Connection, crsr: Cursor, level: str):
+    def update_db(self, crsr: Cursor, level: str):
         for domain, answers in self.get_list(level):
-            crsr.execute(f"INSERT INTO {self.group_name}(domain) VALUES(?)", domain)
+            crsr.execute(f"INSERT INTO {self.group_name}(host) VALUES(?)", domain)
             domain_id = crsr.execute(
-                f"SELECT id from {self.group_name} WHERE domain = ?", domain
+                f"SELECT id from {self.group_name} WHERE host = ?", domain
             ).fetchone()[0]
             answers = map(
                 lambda x: (domain_id, TYPE_LOOKUP[x["type"]], x["answer"]), answers

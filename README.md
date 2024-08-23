@@ -1,6 +1,6 @@
-# Mafazaa-dns-list
+# Mafazaa-dns-db
 
-This repo is basicly for storing blocklists and zones for mafazaa dns servers. Also I coded some python scripts along with some tests to increase productivity and reduce the amount of errors that could occur while updating the list
+This repo is basicly for storing blocklists and zoneslists for mafazaa dns servers. Also I coded some python scripts along with some tests to increase productivity and reduce the amount of errors that could occur while updating the list
 
 the dns servers source code exists at [https://github.com/ahmed-elbehairy7/mafazaa-dns](https://github.com/ahmed-elbehairy7/mafazaa-dns)
 
@@ -69,11 +69,11 @@ since the current hosts aren't big we are not conserened with sorting the list o
 
 ## fetching the lists
 
-I belive the easiest way to get the lists from the server is by requesting the raw json file from github directly, so if you need the high level blocklist for the production environment you can fetch this link [https://raw.githubusercontent.com/ahmed-elbehairy7/mafazaa-dns-lists/dev/high/blocklist.json](https://raw.githubusercontent.com/ahmed-elbehairy7/mafazaa-dns-lists/dev/high/blocklist.json)
+I belive the easiest way to get the lists from the server is by requesting the sqlite db file from github directly, so if you need the high level blocklist for the development environment you can fetch this link [https://raw.githubusercontent.com/mafazaa-org/dns-db/dev/high/data.db](https://raw.githubusercontent.com/mafazaa-org/dns-db/dev/high/data.db)
 
 so the formula is as follows:
 
-https://raw.githubusercontent.com/ahmed-elbehairy7/mafazaa-dns-lists/`{branch}`/`{level}`/`{file}`
+https://raw.githubusercontent.com/mafazaa-org/dns-db/`{branch}`/`{level}`/data.db
 
 for development and testing environments, `exampleblock.com` and `examplezone.com` are added to lists
 
@@ -83,9 +83,3 @@ the python scripts here do some pretty nice stuff automaticly for us like:
 
 -   add the low lists to the high ones programaticlly
 -   validate the lists although it's not a very dependable validation but it helps a little
--   generate regex from lists for block lists
--   sorts the data so it's easy to use log n search algorithms on them for the server
-
-## TODO
-
-Add the ability to communicate with the server and fetch the new updated lists from it, then add programaticly add it to the lists here

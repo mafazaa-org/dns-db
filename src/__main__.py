@@ -4,6 +4,7 @@ from .group import Group
 from sqlite3 import connect, PARSE_DECLTYPES, register_adapter, register_converter
 from os import remove
 from os.path import join
+from re import match
 
 levels = ["high", "low"]
 
@@ -24,7 +25,7 @@ def main():
 
         for group in groups:
             group.initialize_db(crsr)
-            group.update_db(conn, crsr, level)
+            group.update_db(crsr, level)
 
         conn.commit()
         conn.close()
