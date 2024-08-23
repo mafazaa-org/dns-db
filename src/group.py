@@ -8,7 +8,7 @@ class Group:
         self.low_list: list
         self.high_list: list
         self.group_name: str
-        self.to_string: function = extract_www(self.to_string)
+        self.to_string: function = self.to_string
         self.to_records: function
         self.to_db: function
         self.table_schema: list[str]
@@ -65,10 +65,3 @@ class Group:
                 l = self.low_list
         
         return map(self.to_db, l)
-
-
-def extract_www(func):
-    def wrapper(string: str):
-        return func(string).removeprefix("www.")
-
-    return wrapper

@@ -16,7 +16,7 @@ def main():
             remove(db_file)
         except FileNotFoundError:
             ...
-        conn = connect(db_file, detect_types=PARSE_DECLTYPES, autocommit=True)
+        conn = connect(db_file, detect_types=PARSE_DECLTYPES)
         register_adapter(bool, int)
         register_converter("BOOLEAN", lambda v: bool(int(v)))
 
@@ -25,6 +25,9 @@ def main():
         for group in groups:
             group.initialize_db(crsr)
             group.update_db(conn, crsr, level)
+
+        conn.commit()
+        conn.close()
 
 
 if __name__ == "__main__":
