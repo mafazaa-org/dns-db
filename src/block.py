@@ -24,6 +24,8 @@ class Block(Group):
         self.to_db = lambda x: (x,)
         self.group_name = "blocklist"
         self.table_schema = ["domain TEXT PRIMARY KEY"]
+        self.table2_schema = ["regex TEXT PRIMARY KEY", "is_subdomain BOOLEAN"]
+        self.table2_name = "blockregex"
 
         super().__init__()
 
@@ -96,4 +98,19 @@ class Block(Group):
         crsr.executemany(
             f"INSERT INTO {self.group_name} VALUES(?)", self.get_list(level)
         )
-        conn.commit()
+        match level:
+            case "high":
+                blockregex = [
+                    *map(lambda x: (x, False), self.high_regex_contains),
+                    *map(lambda x: (x, True), self.high_regex_subdomains),
+                ]
+            case "low":
+                blockregex = [
+                    *map(lambda x: (x, False), self.low_regex_contains),
+                    *map(lambda x: (x, True), self.low_regex_subdomains),
+                ]
+
+        crsr.executemany(
+            f"INSERT INTO {self.table2_name} (regex, is_subdomain) VALUES(?, ?)",
+            blockregex,
+        )

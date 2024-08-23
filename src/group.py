@@ -7,11 +7,13 @@ class Group:
     def __init__(self) -> None:
         self.low_list: list
         self.high_list: list
+        self.group_name: str
         self.to_string: function = extract_www(self.to_string)
         self.to_records: function
         self.to_db: function
-        self.group_name: str
         self.table_schema: list[str]
+        self.table2_schema: list[str]
+        self.table2_name: str
         self.validate()
 
     def validate(self):
@@ -50,7 +52,8 @@ class Group:
         func(self.high_list, "high list")
 
     def initialize_db(self, crsr: Cursor):
-        crsr.execute(f"CREATE TABLE {self.group_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table_schema))})")
+        crsr.execute(f"CREATE TABLE {self.group_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table_schema))});")
+        crsr.execute(f"CREATE TABLE {self.table2_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table2_schema))});")
 
     def update_db(self, conn: Connection, crsr: Cursor, level : str): ...
     
