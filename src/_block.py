@@ -3,7 +3,6 @@ low = {
         # porn
         "motherless.com",
         "4chan.com",
-        "xvideos.com",
         # vpn
         "surfshark.com",
         "privateinternetaccess.com",
@@ -36,12 +35,13 @@ low = {
             "lgbt",
             "likee",
             "kwai",
-            # malawre
+            # malware
             "(wmail|fairu|bideo|privatproxy|ahoravideo)-(endpoint|blog|chat|cdn)",
         ],
         "subdomains": [
             # ads
-            "ads?"
+            "ads?",
+            "xvideos",
         ],
     },
 }
