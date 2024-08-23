@@ -1,3 +1,4 @@
+from sqlite3 import Cursor
 from ._zones import *
 from .group import Group
 
@@ -27,9 +28,21 @@ class Zones(Group):
             {"host": x["host"], "type": answer["type"], "answer": answer["answer"]}
             for answer in x["answers"]
         ]
-        self.group_name = "zones"
+        self.group_name = "zoneslist"
+        self.table_schema = ["id INTEGER PRIMARY KEY AUTOINCREMENT"]
 
         super().__init__()
+
+    def initialize_db(self, crsr: Cursor):
+        super().initialize_db(crsr)
+
+        answers_schema = [
+            "id INTEGER PRIMARY KEY AUTOINCREMENT",
+            "zone_id INT",
+            "type INT",
+            "answer TEXT",
+        ]
+        crsr.execute(f"CREATE TABLE answers({','.join(map(lambda x : f"\n {x} NOT NULL", answers_schema))}, FOREIGN KEY(zone_id) REFERENCES zoneslist(id))")
 
     # _valid
     def _valid(self, list, list_name: str):

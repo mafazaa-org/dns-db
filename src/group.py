@@ -1,8 +1,5 @@
 from .zone import Zone
-from os.path import join
-from json import dump
-
-LEVELS = ["high", "low"]
+from sqlite3 import Cursor, Connection
 
 
 class Group:
@@ -12,32 +9,14 @@ class Group:
         self.high_list: list
         self.to_string: function = extract_www(self.to_string)
         self.to_records: function
+        self.to_db: function
         self.group_name: str
+        self.table_schema: list[str]
         self.validate()
 
     def validate(self):
-        self.set()
-        self.sort()
         self.valid_zones()
         self.valid()
-
-    def set(self):
-        self.map_to_lists(self._set)
-
-    def _set(self, list: list, list_name: str):
-        found = []
-        for element in list:
-            if self.to_string(element) in found:
-                raise Exception(
-                    f"dublicate of '{element}' in {list_name} \n[{self.group_name}]"
-                )
-            found.append(self.to_string(element))
-
-    def sort(self):
-        self.map_to_lists(lambda x, y: self._sort(x))
-
-    def _sort(self, list: list):
-        list.sort(key=self.to_string)
 
     def valid_zones(self):
         self.map_to_lists(self._valid_zones)
@@ -70,29 +49,19 @@ class Group:
         func(self.low_list, "low list")
         func(self.high_list, "high list")
 
-    def dump(self):
-        jsons = self.jsons
-        for level in LEVELS:
+    def initialize_db(self, crsr: Cursor):
+        crsr.execute(f"CREATE TABLE {self.group_name}({','.join(map(lambda x : f"\n {x} NOT NULL", self.table_schema))})")
 
-            with open(
-                join(level, self.group_name + ".json"), "w", encoding="utf-8"
-            ) as f:
-                dump(jsons[level], f)
-
-    @property
-    def low_json(self) -> dict:
-        return {"list": self.low_list}
-
-    @property
-    def high_json(self) -> dict:
-        return {"list": self.high_list}
-
-    @property
-    def jsons(self):
-        return {
-            "high": self.high_json,
-            "low": self.low_json,
-        }
+    def update_db(self, conn: Connection, crsr: Cursor, level : str): ...
+    
+    def get_list(self, level):
+        match level:
+            case 'high':
+                l = self.high_list
+            case 'low':
+                l = self.low_list
+        
+        return map(self.to_db, l)
 
 
 def extract_www(func):

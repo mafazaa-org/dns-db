@@ -1,4 +1,5 @@
 from re import match
+from sqlite3 import Cursor, Connection
 from ._block import *
 from .group import Group
 
@@ -17,9 +18,12 @@ class Block(Group):
             self.low_regex_subdomains + high["regex"]["subdomains"]
         )
 
+        # initialze for group
         self.to_string = lambda x: x
         self.to_records = lambda x: [{"host": x, "type": "A", "answer": "0.0.0.0"}]
+        self.to_db = lambda x: (x,)
         self.group_name = "blocklist"
+        self.table_schema = ["domain TEXT PRIMARY KEY"]
 
         super().__init__()
 
@@ -30,8 +34,6 @@ class Block(Group):
         self._set(self.low_regex_subdomains, "low regex (subdomains)")
         self._set(self.high_regex_contains, "high regex (contains)")
         self._set(self.high_regex_subdomains, "high regex (subdomains)")
-
-        super().set()
 
         def common_between_regex_and_list(list: list, level: str):
 
@@ -71,14 +73,6 @@ class Block(Group):
         )
 
     @property
-    def low_json(self) -> dict:
-        return {**super().low_json, "regex": self.low_regex}
-
-    @property
-    def high_json(self) -> dict:
-        return {**super().high_json, "regex": self.high_regex}
-
-    @property
     def high_regex(self):
         return self.create_regex(self.high_regex_contains, self.high_regex_subdomains)
 
@@ -88,3 +82,9 @@ class Block(Group):
 
     def create_regex(self, contains: list, subdomains: list):
         return f"(.*({'|'.join(contains)}).*)|((.+\.)?({'|'.join(subdomains)})\..+)"
+
+    def update_db(self, conn: Connection, crsr: Cursor, level: str):
+        crsr.executemany(
+            f"INSERT INTO {self.group_name} VALUES(?)", self.get_list(level)
+        )
+        conn.commit()
