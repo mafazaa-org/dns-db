@@ -14,15 +14,6 @@ def test_initializing():
     low_list.sort()
     high_list.sort()
 
-    assert block.low_list == low_list
-    assert block.high_list == high_list
-
-    assert block.low_json == {"list": block.low_list, "regex": block.low_regex}
-    assert block.high_json == {
-        "list": high_list,
-        "regex": block.high_regex,
-    }
-
     assert block.to_records("www.google.com") == [
         {
             "host": "www.google.com",

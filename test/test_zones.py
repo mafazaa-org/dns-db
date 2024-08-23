@@ -17,9 +17,6 @@ def test_initialization():
 
     zones = __init__()
 
-    low_list.sort(key=zones.to_string)
-    high_list.sort(key=zones.to_string)
-
     assert zones.high_list == high_list
     assert zones.low_list == low_list
 
