@@ -39,18 +39,27 @@ class Block(Group):
 
             for domain in list:
 
-                if not match(self.low_regex, domain) == None:
+                if match(self.low_regex, domain):
                     raise Exception(
                         f"{domain} exists in {level} list while it's already blocked by low.regex \n[{self.group_name}]"
                     )
 
-                if not match(self.high_regex, domain) == None:
+                if match(self.high_regex, domain):
                     raise Exception(
                         f"{domain} exists in {level} list while it's already blocked by high.regex \n[{self.group_name}]"
                     )
 
         common_between_regex_and_list(self.high_list, "high")
         common_between_regex_and_list(self.low_list, "low")
+
+    def _set(self, list: list, list_name: str):
+        found = []
+        for element in list:
+            if self.to_string(element) in found:
+                raise Exception(
+                    f"dublicate of '{element}' in {list_name} \n[{self.group_name}]"
+                )
+            found.append(self.to_string(element))
 
     # valid zones
     def valid_zones(self):
