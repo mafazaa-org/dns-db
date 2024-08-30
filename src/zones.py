@@ -24,6 +24,8 @@ TYPE_LOOKUP = {
 
 class Zones(Group):
 
+    table_name = "zoneslist"
+
     def __init__(self):
         self.low_list = low
         self.high_list = high + low

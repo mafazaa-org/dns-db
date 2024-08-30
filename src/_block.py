@@ -65,8 +65,9 @@ high = {
             "movie",
             # music
             "spotify",
-            "music",
             "soundcloud",
+            # music and tiktok
+            "music(al)?",
         ],
         "subdomains": [],
     },
