@@ -1,0 +1,3 @@
+redis-server & 
+
+python3 . &

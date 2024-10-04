@@ -1,3 +1,3 @@
-from src.__main__ import insert
+from src.__main__ import main
 
-insert()
+main()
