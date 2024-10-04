@@ -60,9 +60,5 @@
 	{
 		"host": "duckduckgo.com",
 		"answers": [{ "type": "CNAME", "answer": "safe.duckduckgo.com" }]
-	},
-	{
-		"host": "1.0.0.127.in-addr.arpa",
-		"answers": [{ "type": "PTR", "answer": "localhost" }]
 	}
 ]
