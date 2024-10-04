@@ -1,7 +1,7 @@
 from redis import Redis
 from os import environ
 from os.path import join
-from json import load
+from json import load, dump
 
 MAX_TTL = 4294967295
 
@@ -12,6 +12,7 @@ class Group:
         self.list: list
         self.low_raw: dict
         self.high_raw: dict
+        self.raw: dict
         self.name: str
         self.to_redis: function
         self.get_raw()
@@ -25,6 +26,12 @@ class Group:
         if environ["level"] != "high":
             return
         self.high_raw = load(open(join("high", f"{self.name}.json"), encoding="utf-8"))
+
+    def update_file(self):
+        dump(
+            self.raw,
+            open(join(environ["level"], f"{self.name}.json"), encoding="utf-8"),
+        )
 
     @classmethod
     def merge_high_decorator(cls, func):

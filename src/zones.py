@@ -22,8 +22,6 @@ TYPE_LOOKUP = {
 
 class Zones(Group):
 
-    table_name = "zoneslist"
-
     def __init__(self):
         self.name = "zones"
         super().__init__()
@@ -36,4 +34,6 @@ class Zones(Group):
 
     def to_redis(self, r : Redis, json : dict):
         for answer in json["answers"]:
-            r.setex(f"{json["host"]}:{TYPE_LOOKUP[answer["type"]]}", MAX_TTL, answer["answer"])
+            key = f"{json["host"]}:{TYPE_LOOKUP[answer["type"]]}"
+            r.lpush(key, answer["answer"])
+            r.expire(key, MAX_TTL)
