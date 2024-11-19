@@ -3,13 +3,13 @@ from .group import Group, MAX_TTL
 
 class Block(Group):
 
-    def __init__(self):
+    def __init__(self, level):
         self.name = "block"
-        super().__init__()
+        super().__init__(level)
         self.list = self.low_raw["list"]
         self.raw = self.low_raw
         self.merge_high()
-        self.to_redis = lambda r, value: r.setex(value, MAX_TTL, 1)
+        self.to_redis = lambda r, value: r.set(value, 1)
 
     @Group.merge_high_decorator
     def merge_high(self):
@@ -24,5 +24,5 @@ class Block(Group):
             },
         }
 
-    def create_regex(self, contains: list, subdomains: list):
-        return f"(.*({'|'.join(contains)}).*)|((.+\.)?({'|'.join(subdomains)})\..+)"
+    def get_regex(self):
+        return f"(.*({'|'.join(self.raw["regex"]["contains"])}).*)|((.+\.)?({'|'.join(self.raw["regex"]["subdomains"])})\..+)"
